@@ -1,8 +1,11 @@
 import { Box, Button, FormControl, FormLabel, Input } from '@chakra-ui/react'
 import useDummyjson from '../../shared/hooks/useDummyjson'
+import { toast } from 'sonner'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
     const { dummyLogin } = useDummyjson()
+    const navigate = useNavigate()
 
     const iniciarSesion = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -17,7 +20,12 @@ const Login = () => {
 
             const dummySession = await dummyLogin(username, password)
 
-            localStorage.setItem("dummySession", JSON.stringify(dummySession))
+            if (dummySession.message == 'Invalid credentials') {
+                toast.error("Credenciales Invalidas")
+            } else {
+                localStorage.setItem("dummySession", JSON.stringify(dummySession))
+                navigate('/')
+            }
         }
     }
 

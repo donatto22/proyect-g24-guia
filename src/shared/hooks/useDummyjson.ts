@@ -1,3 +1,5 @@
+import { DummyProduct, DummyResult } from '../../declarations/Dummyjson'
+
 const useDummyjson = () => {
     const API = 'https://dummyjson.com'
 
@@ -16,8 +18,24 @@ const useDummyjson = () => {
         return data
     }
 
+    async function getDummyProducts() {
+        const response = await fetch(`${API}/products`)
+
+        const data = await response.json()
+
+        return data as DummyResult
+    }
+
+    async function getSingleProduct(id: number) {
+        const response = await fetch(`${API}/products/${id}`)
+
+        const data = await response.json()
+
+        return data as DummyProduct
+    }
+
     return {
-        dummyLogin
+        dummyLogin, getDummyProducts, getSingleProduct
     }
 }
 
