@@ -30,3 +30,13 @@ export type DummyResult = {
     limit: number
     products: Array<DummyProduct>
 }
+
+export type DummySession = {
+    accessToken: string
+    email: string
+    firstName: string
+    gender: string
+    id: number
+    image: string
+    username: string
+}
