@@ -26,9 +26,17 @@ export type DummyProduct = {
     thumbnail: string
 }
 
+export type DummyCategory = {
+    slug: string
+    name: string
+    url: string
+}
+
 export type DummyResult = {
     limit: number
-    products: Array<DummyProduct>
+    products: DummyProduct[]
+    total: number
+    skip: number
 }
 
 export type DummySession = {

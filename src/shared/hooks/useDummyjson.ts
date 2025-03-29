@@ -1,4 +1,4 @@
-import { DummyProduct, DummyResult } from '../../declarations/Dummyjson'
+import { DummyCategory, DummyProduct, DummyResult } from '../../declarations/Dummyjson'
 
 const useDummyjson = () => {
     const API = 'https://dummyjson.com'
@@ -34,8 +34,24 @@ const useDummyjson = () => {
         return data as DummyProduct
     }
 
+    async function getProductsCategories() {
+        const response = await fetch(`${API}/products/categories`)
+
+        const data = await response.json()
+
+        return data as Array<DummyCategory>
+    }
+
+    async function getProductsByCategory(category: string) {
+        const response = await fetch(`${API}/products/category/${category}`)
+
+        const data = await response.json()
+
+        return data as DummyResult
+    }
+
     return {
-        dummyLogin, getDummyProducts, getSingleProduct
+        dummyLogin, getDummyProducts, getSingleProduct, getProductsCategories, getProductsByCategory
     }
 }
 

@@ -4,7 +4,7 @@ import { DummySession } from '../../../declarations/Dummyjson'
 import NavContainer from './NavContainer'
 import ShoppingCartDrawer from './ShoppingCartDrawer'
 import { FiShoppingCart } from 'react-icons/fi'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const Navbar = () => {
     const [session, setSession] = useState<DummySession>()
@@ -12,9 +12,11 @@ const Navbar = () => {
 
     const dummySession = localStorage.getItem('dummySession')
 
-    if (dummySession) {
-        setSession(JSON.parse(dummySession))
-    }
+    useEffect(() => {
+        if (dummySession) {
+            setSession(JSON.parse(dummySession))
+        }
+    }, [])
 
     const navigate = useNavigate()
 
