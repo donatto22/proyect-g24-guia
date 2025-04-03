@@ -7,6 +7,7 @@ import AuthOutlet from './outlets/AuthOutlet'
 import SingleProduct from '../pages/SingleProduct'
 import Products from '../pages/Products'
 import BaseOutlet from './outlets/BaseOutlet'
+import AppwriteProduct from '../pages/AppwriteProduct'
 
 const AppRoutes = () => {
     return (
@@ -17,6 +18,7 @@ const AppRoutes = () => {
                 <Route path='/products'>
                     <Route index element={<Products />} />
                     <Route path=':id' element={<SingleProduct />} />
+                    <Route path='appwrite/:id' element={<AppwriteProduct />} />
                 </Route>
             </Route>
 

@@ -1,7 +1,8 @@
 import { Account, Client, Databases, Storage, ID } from 'appwrite'
+import { Appwrite } from './env'
 
 const client = new Client()
-client.setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID)
+client.setProject(Appwrite.projectId)
 
 const database = new Databases(client) // la base de datos
 const storage = new Storage(client) // el lugar que almacena todo tipo de archivos
