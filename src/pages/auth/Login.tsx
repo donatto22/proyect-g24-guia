@@ -1,7 +1,9 @@
-import { Box, Button, FormControl, FormLabel, Input } from '@chakra-ui/react'
+import { useNavigate, Link as RouterLink } from 'react-router-dom'
 import useDummyjson from '../../shared/hooks/useDummyjson'
+import { Box, Button, Divider, FormControl, FormLabel, HStack, Input, Link, VStack } from '@chakra-ui/react'
 import { toast } from 'sonner'
-import { useNavigate } from 'react-router-dom'
+
+import bgLogin from './../../assets/bg-login.jpg'
 
 const Login = () => {
     const { dummyLogin } = useDummyjson()
@@ -30,19 +32,35 @@ const Login = () => {
     }
 
     return (
-        <Box as='form' w='300px' onSubmit={iniciarSesion}>
-            <FormControl>
-                <FormLabel>Usuario</FormLabel>
-                <Input type='text' name='username' required />
-            </FormControl>
+        <HStack w='100vw' h='100vh'>
+            <Box w={500} bgImage={bgLogin} bgPos='center' bgSize='cover' h='100%' />
 
-            <FormControl>
-                <FormLabel>Contraseña</FormLabel>
-                <Input type='password' name='password' required />
-            </FormControl>
+            <VStack w='calc(100% - 500px)'>
+                <Box as='form' w='300px' onSubmit={iniciarSesion} display='flex' flexDir='column' gap='2em'>
+                    <FormControl>
+                        <FormLabel>Usuario</FormLabel>
+                        <Input type='text' name='username' required />
+                    </FormControl>
 
-            <Button mt='1em' type='submit'>Ingresar</Button>
-        </Box>
+                    <FormControl>
+                        <FormLabel>Contraseña</FormLabel>
+                        <Input type='password' name='password' required />
+                    </FormControl>
+
+                    <Button type='submit' color='red' bgColor='darkred' _hover={{
+                        bgColor: 'crimson',
+                        color: 'darkred'
+                    }} _active={{
+                        color: 'blue'
+                    }}>Ingresar</Button>
+
+                    <Divider />
+
+                    <Link as={RouterLink} color='cyan.900' fontWeight='bold'>Olvidaste tu contraseña?</Link>
+                </Box>
+
+            </VStack>
+        </HStack>
     )
 }
 

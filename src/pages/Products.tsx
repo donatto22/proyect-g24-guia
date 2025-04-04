@@ -5,6 +5,7 @@ import ProductCard from '../shared/components/ProductCard'
 import { HStack, Select } from '@chakra-ui/react'
 
 import { PuffLoader } from 'react-spinners'
+import RoutePath from '../shared/components/RoutePath'
 
 const Products = () => {
     const [products, setProducts] = useState<Array<DummyProduct>>([])

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { DummyProduct } from '../declarations/Dummyjson'
 import { QRCodeSVG } from 'qrcode.react'
 import { Box } from '@chakra-ui/react'
+import RoutePath from '../shared/components/RoutePath'
 
 const SingleProduct = () => {
     const location = useLocation()
@@ -25,6 +26,7 @@ const SingleProduct = () => {
 
     return (
         <Box>
+            <RoutePath />
             <img src={product?.thumbnail} alt={product?.description} />
             <h3>{product?.title}</h3>
 

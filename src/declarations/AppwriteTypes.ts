@@ -8,4 +8,6 @@ export type AppwriteResponse = {
 export interface Product extends Models.Document {
     title: string
     price: number
+    stock: number
+    active: boolean
 }
