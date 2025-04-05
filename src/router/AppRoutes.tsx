@@ -1,30 +1,27 @@
 import { Route, Routes } from 'react-router-dom'
-import Home from '../pages/Home'
-import Login from '../pages/auth/Login'
-import Register from '../pages/auth/Register'
-import Error404 from '../pages/Error404'
-import AuthOutlet from './outlets/AuthOutlet'
-import SingleProduct from '../pages/SingleProduct'
-import Products from '../pages/Products'
 import BaseOutlet from './outlets/BaseOutlet'
-import AppwriteProduct from '../pages/AppwriteProduct'
+import AuthOutlet from './outlets/AuthOutlet'
+
+import { Elements, Paths } from './routes'
+
+const { Home, Products, SingleProduct, AppwriteProduct, Login, Register, Error404 } = Elements
 
 const AppRoutes = () => {
     return (
         <Routes>
             <Route element={<BaseOutlet />}>
-                <Route path='/' element={<Home />} />
+                <Route path={Paths.Home} element={<Home />} />
 
-                <Route path='/products'>
+                <Route path={Paths.Products}>
                     <Route index element={<Products />} />
-                    <Route path=':id' element={<SingleProduct />} />
-                    <Route path='appwrite/:id' element={<AppwriteProduct />} />
+                    <Route path={Paths.SingleProduct} element={<SingleProduct />} />
+                    <Route path={Paths.AppwriteProduct} element={<AppwriteProduct />} />
                 </Route>
             </Route>
 
             <Route element={<AuthOutlet />}>
-                <Route path='/login' element={<Login />} />
-                <Route path='/register' element={<Register />} />
+                <Route path={Paths.Login} element={<Login />} />
+                <Route path={Paths.Register} element={<Register />} />
             </Route>
 
             <Route path='*' element={<Error404 />} />

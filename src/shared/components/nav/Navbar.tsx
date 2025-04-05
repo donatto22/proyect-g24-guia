@@ -1,38 +1,39 @@
-import { Box, Button, HStack, Image, Text, useDisclosure } from '@chakra-ui/react'
+import { Button, HStack, useDisclosure } from '@chakra-ui/react'
 import { Link, useNavigate } from 'react-router-dom'
-import { DummySession } from '../../../declarations/Dummyjson'
 import NavContainer from './NavContainer'
 import ShoppingCartDrawer from './ShoppingCartDrawer'
 import { FiShoppingCart } from 'react-icons/fi'
 import { useEffect, useState } from 'react'
+import { account } from '../../../lib/appwrite'
+import { toast } from 'sonner'
+import { Paths } from '../../../router/routes'
 
 const Navbar = () => {
-    const [session, setSession] = useState<DummySession>()
+    const [session, setSession] = useState<string>()
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const navigate = useNavigate()
 
-    const dummySession = localStorage.getItem('dummySession')
+    const appwriteSession = localStorage.getItem('appwriteSessionId')
 
     useEffect(() => {
-        if (dummySession) {
-            setSession(JSON.parse(dummySession))
+        if (appwriteSession) {
+            setSession(appwriteSession)
         }
     }, [])
 
-    const navigate = useNavigate()
-
-    const logout = () => {
-        localStorage.removeItem('dummySession')
+    const logout = async () => {
+        await account.deleteSession(appwriteSession!).then(() => {
+            localStorage.removeItem('appwriteSessionId')
+            toast.success('Cerraste Sesión')
+            navigate(Paths.Login)
+        }).catch(() => {
+            toast.error('Hubo un error al cerrar sesión')
+        })
     }
 
     return (
         <NavContainer>
             <>
-                {
-                    session ? <HStack>
-                        <Image w='40px' src={session.image} alt={session.username} />
-                        <Text>{session.username}</Text>
-                    </HStack> : <Box></Box>
-                }
                 <HStack>
                     <Link to='/'>Home</Link>
                     <Link to='/products'>Products</Link>

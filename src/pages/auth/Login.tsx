@@ -1,12 +1,12 @@
 import { useNavigate, Link as RouterLink } from 'react-router-dom'
-import useDummyjson from '../../shared/hooks/useDummyjson'
 import { Box, Button, Divider, FormControl, FormLabel, HStack, Input, Link, VStack } from '@chakra-ui/react'
 import { toast } from 'sonner'
 
 import bgLogin from './../../assets/bg-login.jpg'
+import { account } from '../../lib/appwrite'
+import { Paths } from '../../router/routes'
 
 const Login = () => {
-    const { dummyLogin } = useDummyjson()
     const navigate = useNavigate()
 
     const iniciarSesion = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -16,18 +16,17 @@ const Login = () => {
 
         if (formulario) {
             const data = new FormData(formulario)
-            const { username, password } = Object.fromEntries(data.entries()) as {
+            const { email, password } = Object.fromEntries(data.entries()) as {
                 [k: string]: string
             }
 
-            const dummySession = await dummyLogin(username, password)
-
-            if (dummySession.message == 'Invalid credentials') {
-                toast.error("Credenciales Invalidas")
-            } else {
-                localStorage.setItem("dummySession", JSON.stringify(dummySession))
-                navigate('/')
-            }
+            await account.createEmailPasswordSession(email, password).then((response) => {
+                localStorage.setItem('appwriteSessionId', response.$id)
+                toast.success('Has iniciado sesión')
+                navigate(Paths.Home)
+            }).catch(() => {
+                toast.error('Hubo un error al iniciar sesión')
+            })
         }
     }
 
@@ -38,8 +37,8 @@ const Login = () => {
             <VStack w='calc(100% - 500px)'>
                 <Box as='form' w='300px' onSubmit={iniciarSesion} display='flex' flexDir='column' gap='2em'>
                     <FormControl>
-                        <FormLabel>Usuario</FormLabel>
-                        <Input type='text' name='username' required />
+                        <FormLabel>Correo</FormLabel>
+                        <Input type='text' name='email' required />
                     </FormControl>
 
                     <FormControl>
@@ -58,7 +57,6 @@ const Login = () => {
 
                     <Link as={RouterLink} color='cyan.900' fontWeight='bold'>Olvidaste tu contraseña?</Link>
                 </Box>
-
             </VStack>
         </HStack>
     )
