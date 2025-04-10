@@ -19,5 +19,7 @@ export const Paths = {
     AppwriteProduct: 'appwrite/:id',
 
     Login: '/login',
-    Register: '/register'
+    Register: '/register',
+    ForgottenPassword: '/options',
+    Verify: '/verify'
 }

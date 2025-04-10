@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { database, ID } from '../lib/appwrite'
-import { AppwriteResponse, Product } from '../declarations/AppwriteTypes'
+import { account, database, ID } from '../lib/appwrite'
+import { AppwriteResponse, Product, Profile } from '../declarations/AppwriteTypes'
 import { Appwrite } from '../lib/env'
 import { Box, Button, ButtonGroup, FormControl, FormLabel, HStack, Input, Tag, Tooltip } from '@chakra-ui/react'
 import { toast } from 'sonner'
@@ -8,14 +8,31 @@ import { Link } from 'react-router-dom'
 
 import { MdDelete } from 'react-icons/md'
 import { Query } from 'appwrite'
+import { Helmet } from 'react-helmet'
+import useAppwrite from '../shared/hooks/useAppwrite'
 
 const Home = () => {
     const [products, setProducts] = useState<Array<Product>>()
+    const [profile, setProfile] = useState<Profile>()
+
+    const { fromDatabase } = useAppwrite()
+    const { collection } = fromDatabase(Appwrite.databaseId)
+
+    const profileCollection = collection(Appwrite.collections.profile)
+    const productsCollection = collection(Appwrite.collections.products)
+
+    async function getProfile() {
+        const user = await account.get()
+
+        const appwriteProfile = await profileCollection.getDocuments([
+            Query.equal('email', user.email)
+        ])
+
+        setProfile(appwriteProfile.documents[0] as Profile)
+    }
 
     async function traerProductos() {
-        const response: AppwriteResponse = await database.listDocuments(
-            Appwrite.databaseId, Appwrite.collections.products
-        )
+        const response: AppwriteResponse = await productsCollection.getDocuments()
 
         setProducts(response.documents as Array<Product>)
     }
@@ -42,7 +59,7 @@ const Home = () => {
     async function deleteProduct(e: React.MouseEvent<HTMLButtonElement>, productId: string) {
         e.currentTarget.disabled = true
 
-        await database.deleteDocument(Appwrite.databaseId, Appwrite.collections.products, productId).then(() => {
+        await productsCollection.deleteDocument(productId).then(() => {
             traerProductos()
             toast.success('Producto Eliminado')
         }).catch(() => {
@@ -78,13 +95,20 @@ const Home = () => {
         setProducts(response.documents as Array<Product>)
     }
 
+    async function getAll() {
+        await getProfile()
+        await traerProductos()
+    }
+
     useEffect(() => {
-        traerProductos()
+        getAll()
     }, [])
 
     return (
         <>
-            <h1>hola</h1>
+            <Helmet>
+                <title>Hola mundo</title>
+            </Helmet>
 
             <Box as='form' w={300} onSubmit={crearProducto}>
                 <FormControl>
@@ -133,6 +157,16 @@ const Home = () => {
                         </Box>
 
                         <Tooltip label='Eliminar' placement='right' hasArrow>
+                            {
+                                profile?.role == 'buyer' ? <Box></Box> : <Button onClick={(e) => deleteProduct(e, p.$id)}
+                                    bgColor='lightpink' color='darkred' _hover={{
+                                        bgColor: 'darkred',
+                                        color: 'pink'
+                                    }}>
+                                    <MdDelete />
+                                </Button>
+                            }
+
                             <Button onClick={(e) => deleteProduct(e, p.$id)}
                                 bgColor='lightpink' color='darkred' _hover={{
                                     bgColor: 'darkred',

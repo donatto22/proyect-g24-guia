@@ -46,6 +46,7 @@ const Login = () => {
                         <Input type='password' name='password' required />
                     </FormControl>
 
+
                     <Button type='submit' color='red' bgColor='darkred' _hover={{
                         bgColor: 'crimson',
                         color: 'darkred'
@@ -53,9 +54,13 @@ const Login = () => {
                         color: 'blue'
                     }}>Ingresar</Button>
 
+                    <FormControl textAlign='right'>
+                        <Link as={RouterLink} to={Paths.Register} color='cyan.900' fontWeight='bold'>Crear nueva cuenta</Link>
+                    </FormControl>
+
                     <Divider />
 
-                    <Link as={RouterLink} color='cyan.900' fontWeight='bold'>Olvidaste tu contraseña?</Link>
+                    <Link as={RouterLink} color='cyan.900' fontWeight='bold' to={Paths.ForgottenPassword}>Olvidaste tu contraseña?</Link>
                 </Box>
             </VStack>
         </HStack>

@@ -1,4 +1,4 @@
-import { Button, HStack, useDisclosure } from '@chakra-ui/react'
+import { Button, Heading, HStack, useDisclosure } from '@chakra-ui/react'
 import { Link, useNavigate } from 'react-router-dom'
 import NavContainer from './NavContainer'
 import ShoppingCartDrawer from './ShoppingCartDrawer'
@@ -7,19 +7,15 @@ import { useEffect, useState } from 'react'
 import { account } from '../../../lib/appwrite'
 import { toast } from 'sonner'
 import { Paths } from '../../../router/routes'
+import { Models } from 'appwrite'
 
 const Navbar = () => {
-    const [session, setSession] = useState<string>()
+    const [reactAccount, setReactAccount] = useState<Models.User<Models.Preferences>>()
+
     const { isOpen, onOpen, onClose } = useDisclosure()
     const navigate = useNavigate()
 
     const appwriteSession = localStorage.getItem('appwriteSessionId')
-
-    useEffect(() => {
-        if (appwriteSession) {
-            setSession(appwriteSession)
-        }
-    }, [])
 
     const logout = async () => {
         await account.deleteSession(appwriteSession!).then(() => {
@@ -31,17 +27,31 @@ const Navbar = () => {
         })
     }
 
+    useEffect(() => {
+        const getAccount = async () => {
+            setReactAccount(await account.get())
+        }
+
+        getAccount()
+    }, [])
+
     return (
         <NavContainer>
             <>
+                <HStack>
+                    <Heading>{reactAccount?.name}</Heading>
+                </HStack>
                 <HStack>
                     <Link to='/'>Home</Link>
                     <Link to='/products'>Products</Link>
                     <Link to='#' onClick={onOpen}><FiShoppingCart /></Link>
                     {
-                        session ? <Button onClick={logout}>Logout</Button> : <Button onClick={() => navigate('/login')}>Login</Button>
+                        appwriteSession ? <Button onClick={logout}>Logout</Button> :
+                            <>
+                                <Button onClick={() => navigate(Paths.Login)}>Login</Button>
+                                <Button onClick={() => navigate(Paths.Register)}>Register</Button>
+                            </>
                     }
-
                 </HStack>
 
                 <ShoppingCartDrawer isOpen={isOpen} onClose={onClose} />

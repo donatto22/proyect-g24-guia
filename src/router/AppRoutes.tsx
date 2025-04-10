@@ -3,6 +3,8 @@ import BaseOutlet from './outlets/BaseOutlet'
 import AuthOutlet from './outlets/AuthOutlet'
 
 import { Elements, Paths } from './routes'
+import ForgottenPassword from '../pages/auth/ForgottenPassword'
+import Verify from '../pages/auth/Verify'
 
 const { Home, Products, SingleProduct, AppwriteProduct, Login, Register, Error404 } = Elements
 
@@ -22,6 +24,8 @@ const AppRoutes = () => {
             <Route element={<AuthOutlet />}>
                 <Route path={Paths.Login} element={<Login />} />
                 <Route path={Paths.Register} element={<Register />} />
+                <Route path={Paths.ForgottenPassword} element={<ForgottenPassword />} />
+                <Route path={Paths.Verify} element={<Verify />} />
             </Route>
 
             <Route path='*' element={<Error404 />} />

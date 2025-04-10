@@ -3,6 +3,7 @@ export const Appwrite = {
     databaseId: import.meta.env.VITE_APPWRITE_DATABASE_ID,
 
     collections: {
-        products: import.meta.env.VITE_APPWRITE_PRODUCTS_COLLECTION_ID
+        products: import.meta.env.VITE_APPWRITE_PRODUCTS_COLLECTION_ID,
+        profile: import.meta.env.VITE_APPWRITE_PROFILE_COLLECTION_ID
     }
 }
