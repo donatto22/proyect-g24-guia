@@ -5,6 +5,7 @@ import AuthOutlet from './outlets/AuthOutlet'
 import { Elements, Paths } from './routes'
 import ForgottenPassword from '../pages/auth/ForgottenPassword'
 import Verify from '../pages/auth/Verify'
+import FormArchivo from '../pages/FormArchivo'
 
 const { Home, Products, SingleProduct, AppwriteProduct, Login, Register, Error404 } = Elements
 
@@ -13,6 +14,7 @@ const AppRoutes = () => {
         <Routes>
             <Route element={<BaseOutlet />}>
                 <Route path={Paths.Home} element={<Home />} />
+                <Route path={Paths.FormArchivo} element={<FormArchivo />} />
 
                 <Route path={Paths.Products}>
                     <Route index element={<Products />} />

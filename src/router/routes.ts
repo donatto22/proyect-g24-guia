@@ -21,5 +21,6 @@ export const Paths = {
     Login: '/login',
     Register: '/register',
     ForgottenPassword: '/options',
-    Verify: '/verify'
+    Verify: '/verify',
+    FormArchivo: '/file'
 }

@@ -1,16 +1,19 @@
-import { Button, Heading, HStack, useDisclosure } from '@chakra-ui/react'
+import { Avatar, Button, Heading, HStack, useDisclosure } from '@chakra-ui/react'
 import { Link, useNavigate } from 'react-router-dom'
 import NavContainer from './NavContainer'
 import ShoppingCartDrawer from './ShoppingCartDrawer'
 import { FiShoppingCart } from 'react-icons/fi'
 import { useEffect, useState } from 'react'
-import { account } from '../../../lib/appwrite'
+import { account, database } from '../../../lib/appwrite'
 import { toast } from 'sonner'
 import { Paths } from '../../../router/routes'
-import { Models } from 'appwrite'
+import { Models, Query } from 'appwrite'
+import { Appwrite } from '../../../lib/env'
+import { Profile } from '../../../declarations/AppwriteTypes'
 
 const Navbar = () => {
     const [reactAccount, setReactAccount] = useState<Models.User<Models.Preferences>>()
+    const [profileImage, setProfileImage] = useState<string>()
 
     const { isOpen, onOpen, onClose } = useDisclosure()
     const navigate = useNavigate()
@@ -27,18 +30,34 @@ const Navbar = () => {
         })
     }
 
-    useEffect(() => {
-        const getAccount = async () => {
-            setReactAccount(await account.get())
-        }
 
-        getAccount()
+    const getAccount = async () => {
+        setReactAccount(await account.get())
+    }
+
+    const getProfile = async () => {
+        await getAccount()
+
+        const response = await database.listDocuments(Appwrite.databaseId, Appwrite.collections.profile, [
+            Query.equal('email', (await account.get()).email)
+        ])
+
+        setProfileImage((response.documents[0] as Profile).profilePhoto)
+    }
+
+
+    useEffect(() => {
+        getProfile()
     }, [])
 
     return (
         <NavContainer>
             <>
                 <HStack>
+                    {
+                        profileImage ? <Avatar name={reactAccount?.name} src={profileImage} /> :
+                            <Avatar name={reactAccount?.name} />
+                    }
                     <Heading>{reactAccount?.name}</Heading>
                 </HStack>
                 <HStack>
