@@ -1,13 +1,13 @@
-import { useNavigate, Link as RouterLink } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import { Box, Button, Divider, FormControl, FormLabel, HStack, Input, Link, VStack } from '@chakra-ui/react'
-import { toast } from 'sonner'
 
 import bgLogin from './../../assets/bg-login.jpg'
-import { account } from '../../lib/appwrite'
 import { Paths } from '../../router/routes'
+import { useContext } from 'react'
+import { usuarioContexto } from '../../shared/context/UserContext'
 
 const Login = () => {
-    const navigate = useNavigate()
+    const userContext = useContext(usuarioContexto)
 
     const iniciarSesion = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -20,13 +20,9 @@ const Login = () => {
                 [k: string]: string
             }
 
-            await account.createEmailPasswordSession(email, password).then((response) => {
-                localStorage.setItem('appwriteSessionId', response.$id)
-                toast.success('Has iniciado sesión')
-                navigate(Paths.Home)
-            }).catch(() => {
-                toast.error('Hubo un error al iniciar sesión')
-            })
+            console.log(email, password)
+
+            await userContext.login(email, password)
         }
     }
 

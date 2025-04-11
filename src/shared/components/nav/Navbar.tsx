@@ -3,20 +3,17 @@ import { Link, useNavigate } from 'react-router-dom'
 import NavContainer from './NavContainer'
 import ShoppingCartDrawer from './ShoppingCartDrawer'
 import { FiShoppingCart } from 'react-icons/fi'
-import { useEffect, useState } from 'react'
-import { account, database } from '../../../lib/appwrite'
+import { useContext } from 'react'
+import { account } from '../../../lib/appwrite'
 import { toast } from 'sonner'
 import { Paths } from '../../../router/routes'
-import { Models, Query } from 'appwrite'
-import { Appwrite } from '../../../lib/env'
-import { Profile } from '../../../declarations/AppwriteTypes'
+import { usuarioContexto } from '../../context/UserContext'
 
 const Navbar = () => {
-    const [reactAccount, setReactAccount] = useState<Models.User<Models.Preferences>>()
-    const [profileImage, setProfileImage] = useState<string>()
-
     const { isOpen, onOpen, onClose } = useDisclosure()
     const navigate = useNavigate()
+
+    const userContext = useContext(usuarioContexto)
 
     const appwriteSession = localStorage.getItem('appwriteSessionId')
 
@@ -30,35 +27,18 @@ const Navbar = () => {
         })
     }
 
-
-    const getAccount = async () => {
-        setReactAccount(await account.get())
-    }
-
-    const getProfile = async () => {
-        await getAccount()
-
-        const response = await database.listDocuments(Appwrite.databaseId, Appwrite.collections.profile, [
-            Query.equal('email', (await account.get()).email)
-        ])
-
-        setProfileImage((response.documents[0] as Profile).profilePhoto)
-    }
-
-
-    useEffect(() => {
-        getProfile()
-    }, [])
-
     return (
         <NavContainer>
             <>
                 <HStack>
+
                     {
-                        profileImage ? <Avatar name={reactAccount?.name} src={profileImage} /> :
-                            <Avatar name={reactAccount?.name} />
+                        (userContext?.profile && userContext?.account) &&
+                        <>
+                            <Avatar name={userContext?.account.name} src={userContext?.profile.profilePhoto} /> :
+                            <Heading>{userContext?.account?.name}</Heading>
+                        </>
                     }
-                    <Heading>{reactAccount?.name}</Heading>
                 </HStack>
                 <HStack>
                     <Link to='/'>Home</Link>

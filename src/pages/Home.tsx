@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { account, database, ID } from '../lib/appwrite'
-import { AppwriteResponse, Product, Profile } from '../declarations/AppwriteTypes'
+import React, { useContext, useEffect, useState } from 'react'
+import { database, ID } from '../lib/appwrite'
+import { AppwriteResponse, Product } from '../declarations/AppwriteTypes'
 import { Appwrite } from '../lib/env'
 import { Box, Button, ButtonGroup, FormControl, FormLabel, HStack, Input, Tag, Tooltip } from '@chakra-ui/react'
 import { toast } from 'sonner'
@@ -10,26 +10,16 @@ import { MdDelete } from 'react-icons/md'
 import { Query } from 'appwrite'
 import { Helmet } from 'react-helmet'
 import useAppwrite from '../shared/hooks/useAppwrite'
+import { usuarioContexto } from '../shared/context/UserContext'
 
 const Home = () => {
     const [products, setProducts] = useState<Array<Product>>()
-    const [profile, setProfile] = useState<Profile>()
+
+    const userContext = useContext(usuarioContexto)
 
     const { fromDatabase } = useAppwrite()
     const { collection } = fromDatabase(Appwrite.databaseId)
-
-    const profileCollection = collection(Appwrite.collections.profile)
     const productsCollection = collection(Appwrite.collections.products)
-
-    async function getProfile() {
-        const user = await account.get()
-
-        const appwriteProfile = await profileCollection.getDocuments([
-            Query.equal('email', user.email)
-        ])
-
-        setProfile(appwriteProfile.documents[0] as Profile)
-    }
 
     async function traerProductos() {
         const response: AppwriteResponse = await productsCollection.getDocuments()
@@ -96,7 +86,6 @@ const Home = () => {
     }
 
     async function getAll() {
-        await getProfile()
         await traerProductos()
     }
 
@@ -158,7 +147,7 @@ const Home = () => {
 
                         <Tooltip label='Eliminar' placement='right' hasArrow>
                             {
-                                profile?.role == 'buyer' ? <Box></Box> : <Button onClick={(e) => deleteProduct(e, p.$id)}
+                                userContext?.profile?.role == 'buyer' ? <Box></Box> : <Button onClick={(e) => deleteProduct(e, p.$id)}
                                     bgColor='lightpink' color='darkred' _hover={{
                                         bgColor: 'darkred',
                                         color: 'pink'

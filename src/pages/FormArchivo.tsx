@@ -3,9 +3,10 @@ import { account, ID } from '../lib/appwrite'
 import { Appwrite } from '../lib/env'
 import { toast } from 'sonner'
 import useAppwrite from '../shared/hooks/useAppwrite'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { Query } from 'appwrite'
 import { Profile } from '../declarations/AppwriteTypes'
+import { usuarioContexto } from '../shared/context/UserContext'
 
 type FormEntries = {
     archivo: File
@@ -16,6 +17,10 @@ const FormArchivo = () => {
 
     const { fromStorage, fromDatabase } = useAppwrite()
     const { createFile, getFile } = fromStorage().bucket(Appwrite.filesBucketId)
+
+    const contexto = useContext(usuarioContexto)
+
+    console.log(contexto)
 
     const profileCollection = fromDatabase(Appwrite.databaseId).collection(Appwrite.collections.profile)
 
