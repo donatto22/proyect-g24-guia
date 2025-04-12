@@ -11,6 +11,7 @@ import { Query } from 'appwrite'
 import { Helmet } from 'react-helmet'
 import useAppwrite from '../shared/hooks/useAppwrite'
 import { usuarioContexto } from '../shared/context/UserContext'
+import { useCounterStore } from '../shared/store/useCounterStore'
 
 const Home = () => {
     const [products, setProducts] = useState<Array<Product>>()
@@ -20,6 +21,8 @@ const Home = () => {
     const { fromDatabase } = useAppwrite()
     const { collection } = fromDatabase(Appwrite.databaseId)
     const productsCollection = collection(Appwrite.collections.products)
+
+    const { counter2, sumarUno } = useCounterStore()
 
     async function traerProductos() {
         const response: AppwriteResponse = await productsCollection.getDocuments()
@@ -100,6 +103,10 @@ const Home = () => {
             </Helmet>
 
             <Box as='form' w={300} onSubmit={crearProducto}>
+                <h1>{counter2}</h1>
+                <Button onClick={sumarUno}>Incrementar</Button>
+
+
                 <FormControl>
                     <FormLabel>Titulo</FormLabel>
                     <Input type='text' name='title' />

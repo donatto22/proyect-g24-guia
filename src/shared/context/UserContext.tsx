@@ -11,12 +11,15 @@ import { toast } from 'sonner'
 type UsuarioContexto = {
     profile: Profile
     account: Models.User<Models.Preferences>
+    appwriteSession: string
     login: (email: string, password: string) => void
 }
 
 export const usuarioContexto = createContext<UsuarioContexto | null>(null)
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
+    const appwriteSession = localStorage.getItem('appwriteSessionId')
+
     const [profile, setProfile] = useState<Profile>()
     const [account, setAccount] = useState<Models.User<Models.Preferences>>()
 
@@ -48,8 +51,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
             navigate(Paths.Home)
             toast.success('Login exitoso')
         })
+
         await loadData()
     }
+
+
 
     useEffect(() => {
         if (localStorage.getItem('appwriteSessionId')) {
@@ -58,7 +64,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }, [])
 
     return (
-        <usuarioContexto.Provider value={{ profile, account, login }}>
+        <usuarioContexto.Provider value={{ profile, account, appwriteSession, login }}>
             {children}
         </usuarioContexto.Provider>
     )
