@@ -3,6 +3,7 @@ import { create } from 'zustand'
 type CounterStore = {
     counter: number
     sumarUno: () => void
+    sumarAlgo: (valor: number) => void
     quitarUno: () => void
     duplicar: () => void
     mitad: () => void
