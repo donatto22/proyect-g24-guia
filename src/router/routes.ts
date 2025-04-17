@@ -8,7 +8,9 @@ export const Elements = {
     Error404: LoaderHOC(lazy(() => import('../pages/Error404'))),
     SingleProduct: LoaderHOC(lazy(() => import('../pages/SingleProduct'))),
     Products: LoaderHOC(lazy(() => import('../pages/Products'))),
-    AppwriteProduct: LoaderHOC(lazy(() => import('../pages/AppwriteProduct')))
+    AppwriteProduct: LoaderHOC(lazy(() => import('../pages/AppwriteProduct'))),
+    Receipt: LoaderHOC(lazy(() => import('../pages/Receipt'))),
+    Payment: LoaderHOC(lazy(() => import('../pages/CompraExitosa')))
 }
 
 export const Paths = {
@@ -22,5 +24,7 @@ export const Paths = {
     Register: '/register',
     ForgottenPassword: '/options',
     Verify: '/verify',
-    FormArchivo: '/file'
+    FormArchivo: '/file',
+    Receipt: '/receipt',
+    Payment: '/payment'
 }

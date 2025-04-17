@@ -17,7 +17,7 @@ const Navbar = () => {
     const userContext = useContext(usuarioContexto)
 
     const logout = async () => {
-        await account.deleteSession(userContext?.appwriteSession).then(() => {
+        await account.deleteSession(userContext!.appwriteSession).then(() => {
             localStorage.removeItem('appwriteSessionId')
             toast.success('Cerraste Sesión')
             navigate(Paths.Login)

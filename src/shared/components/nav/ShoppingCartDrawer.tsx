@@ -1,13 +1,16 @@
-import { Button, VStack, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, HStack, Image, Text } from '@chakra-ui/react'
+import { Button, VStack, Drawer, DrawerBody, DrawerCloseButton, DrawerContent, DrawerFooter, DrawerHeader, DrawerOverlay, Text } from '@chakra-ui/react'
 import { useCartStore } from '../../store/useCartStore'
-import { MdDelete } from 'react-icons/md'
 import { LuShoppingCart } from "react-icons/lu"
+import ShoppingCartItem from './ShoppingCartItem'
+import { useNavigate } from 'react-router-dom'
+import { Paths } from '../../../router/routes'
 
 const ShoppingCartDrawer = ({ isOpen, onClose }: {
     isOpen: boolean
     onClose: () => void
 }) => {
-    const { products, deleteProduct, addToCart, clearCart } = useCartStore()
+    const { products, clearCart } = useCartStore()
+    const navigate = useNavigate()
 
     return (
         <Drawer
@@ -29,30 +32,9 @@ const ShoppingCartDrawer = ({ isOpen, onClose }: {
                         </VStack>
                     }
 
-
                     {
                         products.map((p) => (
-                            <HStack justifyContent='space-between' bgColor='#f9f9f9' mb='1em'
-                                p='10px' borderRadius='10px' outline='1px solid #ddd'>
-                                <HStack>
-                                    <Image w={50} src={p.product.thumbnail} alt={p.product.title} />
-                                    <VStack alignItems='start'>
-                                        <Text w={200} key={p.product.id}>{p.product.title}</Text>
-                                        <HStack>
-                                            <Button>-</Button>
-                                            <Text key={p.product.id}>{p.quantity}</Text>
-                                            <Button onClick={() => addToCart(p.product)}>+</Button>
-                                        </HStack>
-                                    </VStack>
-                                </HStack>
-
-                                <HStack>
-                                    <Text key={p.product.id}>S/. {Number(p.product.price * p.quantity).toFixed(2)}</Text>
-                                    <Button colorScheme='red' onClick={() => deleteProduct(p.product.id)}>
-                                        <MdDelete />
-                                    </Button>
-                                </HStack>
-                            </HStack>
+                            <ShoppingCartItem key={p.product.id} p={p} />
                         ))
                     }
                 </DrawerBody>
@@ -65,7 +47,7 @@ const ShoppingCartDrawer = ({ isOpen, onClose }: {
                         products.length > 0 && <Button variant='outline' colorScheme='red' mr={3} onClick={clearCart}>Vaciar</Button>
                     }
                     {
-                        products.length > 0 && <Button colorScheme='blue'>Continuar</Button>
+                        products.length > 0 && <Button colorScheme='blue' onClick={() => navigate(Paths.Receipt)}>Continuar</Button>
                     }
                 </DrawerFooter>
             </DrawerContent>
