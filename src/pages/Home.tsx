@@ -9,9 +9,9 @@ import { Link } from 'react-router-dom'
 import { MdDelete } from 'react-icons/md'
 import { Query } from 'appwrite'
 import { Helmet } from 'react-helmet'
-import useAppwrite from '../shared/hooks/useAppwrite'
-import { usuarioContexto } from '../shared/context/UserContext'
 import { useCounterStore } from '../shared/store/useCounterStore'
+import useAppwrite from '@hooks/useAppwrite'
+import { usuarioContexto } from '@context/UserContext'
 
 const Home = () => {
     const [products, setProducts] = useState<Array<Product>>()
