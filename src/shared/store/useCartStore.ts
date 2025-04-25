@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 import { DummyProduct } from '../../declarations/Dummyjson'
 import { toast } from 'sonner'
 
@@ -16,8 +17,7 @@ type Cart = {
 }
 
 // prev == state
-
-export const useCartStore = create<Cart>((set) => ({
+export const useCartStore = create(persist<Cart>((set) => ({
     products: [],
     addToCart: (product: DummyProduct) => set((prev) => {
         toast.success('Producto agregado', {
@@ -61,4 +61,6 @@ export const useCartStore = create<Cart>((set) => ({
     clearCart: () => set(() => ({
         products: []
     }))
+}), {
+    name: 'carrito'
 }))

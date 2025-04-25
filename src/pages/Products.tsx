@@ -5,7 +5,8 @@ import ProductCard from '../shared/components/ProductCard'
 import { HStack, Select } from '@chakra-ui/react'
 
 import { PuffLoader } from 'react-spinners'
-import RoutePath from '../shared/components/RoutePath'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { queryClient } from 'src/App'
 
 const Products = () => {
     const [products, setProducts] = useState<Array<DummyProduct>>([])
@@ -13,6 +14,11 @@ const Products = () => {
     const [loading, setLoading] = useState<boolean>(false)
 
     const { getDummyProducts, getProductsCategories, getProductsByCategory } = useDummyjson()
+
+    const { isPending, error, data, refetch } = useQuery({
+        queryKey: ['dummyProducts'],
+        queryFn: async () => await getDummyProducts()
+    })
 
     async function getProducts() {
         setLoading(true)
@@ -29,8 +35,6 @@ const Products = () => {
     }
 
     async function getFilteredProducts(e: React.ChangeEvent<HTMLSelectElement>) {
-        setLoading(true)
-
         let data = null
         const value = e.target.value
 
@@ -40,10 +44,16 @@ const Products = () => {
             data = await getDummyProducts()
         }
 
-        setProducts(data.products)
-
-        setLoading(false)
+        return data
     }
+
+    // TODO: test
+    const getFilterProductsMutation = useMutation({
+        mutationFn: async (e: React.ChangeEvent<HTMLSelectElement>) => getFilteredProducts(e),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['dummyProducts'] })
+    })
+
+
 
     useEffect(() => {
         getProducts()
@@ -53,7 +63,7 @@ const Products = () => {
 
     return (
         <>
-            <Select onChange={getFilteredProducts}>
+            <Select onChange={(e) => getFilterProductsMutation.mutate(e)}>
                 <option value="*">Todos</option>
 
                 {
@@ -64,12 +74,12 @@ const Products = () => {
             </Select>
 
             {
-                loading ?
+                isPending ?
                     <HStack height='50vh' justifyContent='center' alignItems='center'>
                         <PuffLoader />
                     </HStack> : <HStack flexWrap='wrap' justifyContent='space-between'>
                         {
-                            products.map(product => (
+                            data?.products.map(product => (
                                 <ProductCard key={product.id} product={product} />
                             ))
                         }

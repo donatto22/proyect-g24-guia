@@ -1,4 +1,4 @@
-import { Box, Button, Divider, FormControl, FormLabel, HStack, Input, Link, VStack } from '@chakra-ui/react'
+import { Box, Button, Divider, FormControl, FormHelperText, FormLabel, HStack, Input, Link, VStack } from '@chakra-ui/react'
 import { Link as RouterLink } from 'react-router-dom'
 
 import bgRegister from './../../assets/bgRegister.jpg'
@@ -7,7 +7,24 @@ import { account, database, ID } from '../../lib/appwrite'
 import { toast } from 'sonner'
 import { Appwrite } from '../../lib/env'
 
+import { useForm } from 'react-hook-form'
+import { useRef } from 'react'
+
 const Register = () => {
+    const {
+        register,
+        watch,
+        formState: { errors },
+        handleSubmit
+    } = useForm()
+
+    const onSubmit = (data) => {
+        console.log(data)
+    }
+
+    const formularioRef = useRef(null)
+
+    console.log(watch('usuario'))
 
     const createAccount = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -39,20 +56,33 @@ const Register = () => {
             <Box w={500} bgImage={bgRegister} bgPos='center' bgSize='cover' h='100%' />
 
             <VStack w='calc(100% - 500px)'>
-                <Box as='form' onSubmit={createAccount} w='300px' display='flex' flexDir='column' gap='2em'>
-                    <FormControl>
+                <Box as='form' ref={formularioRef} onSubmit={handleSubmit(onSubmit)} w='300px' display='flex' flexDir='column' gap='2em'>
+                    <FormControl isInvalid={errors.usuario ? true : false}>
                         <FormLabel>Nombre de usuario</FormLabel>
-                        <Input type='text' name='username' required />
+                        <Input type='text' {...register('usuario', {
+                            required: {
+                                value: true,
+                                message: 'Esto es obligatorio'
+                            },
+
+                            minLength: {
+                                value: 10,
+                                message: 'Al menos 10 letras'
+                            }
+                        })} />
+                        {
+                            errors.usuario && <FormHelperText color='red'>{errors.usuario.message}</FormHelperText>
+                        }
                     </FormControl>
 
                     <FormControl>
                         <FormLabel>Correo</FormLabel>
-                        <Input type='text' name='email' required />
+                        <Input type='text' {...register('correo', { required: true })} />
                     </FormControl>
 
                     <FormControl>
                         <FormLabel>Contraseña</FormLabel>
-                        <Input type='password' name='password' required />
+                        <Input type='password' name='password' />
                     </FormControl>
 
                     <Button type='submit' color='red' bgColor='darkred' _hover={{

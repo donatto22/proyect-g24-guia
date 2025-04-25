@@ -9,12 +9,27 @@ import { usuarioContexto } from '../shared/context/UserContext'
 import { CiLogout } from "react-icons/ci"
 import { account } from '../lib/appwrite'
 import { toast } from 'sonner'
+import { useHotkeys } from 'react-hotkeys-hook'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 const Receipt = () => {
     const userContext = useContext(usuarioContexto)
     const navigate = useNavigate()
 
     const { products, deleteProduct, clearCart } = useCartStore()
+
+    useHotkeys('ctrl+q', () => withReactContent(Swal).fire({
+        title: 'Estás seguro de cerrar sesión?',
+        icon: 'warning',
+        showCloseButton: true,
+        showConfirmButton: true,
+        showDenyButton: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            logout()
+        }
+    }))
 
     const logout = async () => {
         await account.deleteSession(userContext!.appwriteSession).then(() => {
@@ -59,7 +74,7 @@ const Receipt = () => {
                     </MenuButton>
                     <MenuList>
                         <MenuItem icon={<MdDelete size={20} />} onClick={clearCart}>Vaciar Carrito</MenuItem>
-                        <MenuItem icon={<CiLogout size={20} />} onClick={logout}>Cerrar sesión</MenuItem>
+                        <MenuItem icon={<CiLogout size={20} />} onClick={logout} command='Ctrl + Q'>Cerrar sesión</MenuItem>
                     </MenuList>
                 </Menu>
             </HStack>

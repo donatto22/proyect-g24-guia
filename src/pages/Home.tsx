@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { database, ID } from '../lib/appwrite'
 import { AppwriteResponse, Product } from '../declarations/AppwriteTypes'
 import { Appwrite } from '../lib/env'
-import { Box, Button, ButtonGroup, FormControl, FormLabel, HStack, Input, Tag, Tooltip } from '@chakra-ui/react'
+import { Box, Button, ButtonGroup, FormControl, FormLabel, HStack, Image, Input, Tag, Tooltip } from '@chakra-ui/react'
 import { toast } from 'sonner'
 import { Link } from 'react-router-dom'
 
@@ -12,6 +12,12 @@ import { Helmet } from 'react-helmet'
 import { useCounterStore } from '../shared/store/useCounterStore'
 import useAppwrite from '@hooks/useAppwrite'
 import { usuarioContexto } from '@context/UserContext'
+
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation } from 'swiper/modules'
+
+import 'swiper/css'
+import 'swiper/css/navigation'
 
 const Home = () => {
     const [products, setProducts] = useState<Array<Product>>()
@@ -101,6 +107,25 @@ const Home = () => {
             <Helmet>
                 <title>Hola mundo</title>
             </Helmet>
+
+            <Box w='800px' m='0 auto'>
+                <Swiper modules={[Navigation]} navigation>
+                    <SwiperSlide>
+                        <Box w='100%' display='flex' justifyContent='center'>
+                            <Image w={500} src='./src/assets/carousel/image1.jpg' alt='imagen' />
+                        </Box>
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <Image w={500} src='./src/assets/carousel/image2.png' alt='imagen' />
+
+                    </SwiperSlide>
+                    <SwiperSlide>
+                        <Image w={500} src='./src/assets/carousel/image3.jpg' alt='imagen' />
+                    </SwiperSlide>
+                </Swiper>
+            </Box>
+
+            <hr />
 
             <Box as='form' w={300} onSubmit={crearProducto}>
                 <h1>{counter2}</h1>

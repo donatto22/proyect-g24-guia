@@ -5,6 +5,10 @@ import { UserProvider } from './shared/context/UserContext'
 
 import { Analytics } from "@vercel/analytics/react"
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+export const queryClient = new QueryClient()
+
 const theme = extendTheme({
     fonts: {
         body: 'Montserrat',
@@ -17,9 +21,11 @@ const App = () => {
         <ChakraProvider theme={theme}>
             <Analytics />
             <Toaster richColors />
-            <UserProvider>
-                <AppRoutes />
-            </UserProvider>
+            <QueryClientProvider client={queryClient}>
+                <UserProvider>
+                    <AppRoutes />
+                </UserProvider>
+            </QueryClientProvider>
         </ChakraProvider>
     )
 }
