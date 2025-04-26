@@ -15,9 +15,13 @@ const Products = () => {
 
     const { getDummyProducts, getProductsCategories, getProductsByCategory } = useDummyjson()
 
-    const { isPending, error, data, refetch } = useQuery({
+    const { isPending } = useQuery({
         queryKey: ['dummyProducts'],
-        queryFn: async () => await getDummyProducts()
+        queryFn: async () => {
+            const data = await getDummyProducts()
+            setProducts(data.products)
+            return data
+        }
     })
 
     async function getProducts() {
@@ -49,10 +53,14 @@ const Products = () => {
 
     // TODO: test
     const getFilterProductsMutation = useMutation({
-        mutationFn: async (e: React.ChangeEvent<HTMLSelectElement>) => getFilteredProducts(e),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['dummyProducts'] })
+        mutationFn: async (e: React.ChangeEvent<HTMLSelectElement>) => {
+            const data = await getFilteredProducts(e)
+            return data.products
+        },
+        onSuccess: (filteredProducts) => {
+            setProducts(filteredProducts)
+        }
     })
-
 
 
     useEffect(() => {
@@ -79,7 +87,7 @@ const Products = () => {
                         <PuffLoader />
                     </HStack> : <HStack flexWrap='wrap' justifyContent='space-between'>
                         {
-                            data?.products.map(product => (
+                            products.map(product => (
                                 <ProductCard key={product.id} product={product} />
                             ))
                         }
